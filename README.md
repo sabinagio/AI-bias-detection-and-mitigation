@@ -1,5 +1,5 @@
 # PULSE - AI bias detection and mitigation in sentiment analysis
-This project was created in 48 hours by the Entourage Penguins team ([Camille Coeurjoly](https://github.com/Camille1992), [Leo Stahlschmidt](https://www.linkedin.com/in/leo-s-34680012b/), and [Sabina Firtala](https://github.com/sabinagio)) at the 6th edition of the Hackathon for Good.
+This project was created in 48 hours by the Entourage Penguins team ([Camille Coeurjoly](https://www.linkedin.com/in/camillecoeurjoly/), [Leo Stahlschmidt](https://www.linkedin.com/in/leo-s-34680012b/), and [Sabina Firtala](https://www.linkedin.com/in/sabina-firtala/)) at the 6th edition of the Hackathon for Good.
 
 
 ## Problem Statement
