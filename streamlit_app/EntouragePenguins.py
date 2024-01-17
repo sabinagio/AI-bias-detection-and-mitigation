@@ -4,7 +4,7 @@ import pandas as pd
 
 #import frequency_review
 
-st.session_state["apptitle"] = "🐧 Entourage Penguins' AI Bias Identification and Correction Tool"
+st.session_state["apptitle"] = "🐧 PULSE - AI Bias Identification and Correction Tool"
 st.session_state["dataset"] = ""
 
 st.title(st.session_state["apptitle"])

@@ -2,13 +2,10 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-import plotly.express as px
-import plotly.graph_objects as go
-import nltk
-from preprocess import clean_text, stop
-from scipy.stats import chi2_contingency
+lorem = """
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+"""
 
-st.session_state["df"] = pd.DataFrame()
 
 
 st.title(st.session_state["apptitle"])
@@ -80,175 +77,66 @@ if(not df.empty):
 
 st.header("Dataset Processing")
 
-
-###############################
-# Processing Steps 1: Extracting Racial Predictor
-################################
-RACIAL_KW = ['chinese', 'chinese-american', 'american-born chinese', 'cuban', 'cuban-american', 'dominican', \
-    'dominican-american', 'salvadoran', 'salvadoran-american', 'guatemalan', 'guatemalan-american', 'indian', \
-    'indian-american', 'mexican', 'mexican-american', 'chicana', 'chicano', 'filipina', 'filipina-american', \
-    'filipino', 'filipino-american', 'korean', 'korean-american', 'vietnamese', 'vietnamese-american', 'asian', 'asian-american', 'desi', 'east asian', 'oriental', 'south asian', 'southeast asian', 'african', 'african-american', 'black', 'hispanic', 'latinx', 'latine', 'latina', 'latino', 'latin american', 'pacific islander', 'aapi', 'bipoc', 'person of color', 'people of color', 'man of color', 'men of color', 'woman of color', 'women of color', 'ashkenazi jewish', "bahá'í", 'buddhist', 'cheondoist', 'confucianist', 'conservative jewish', 'druze', 'hasidic', 'hindu', 'jain', 'jewish', 'muslim', 'orthodox jewish', 'rasta', 'rastafari', 'rastafarian', 'reform jewish', 'sephardic jewish', 'shia', 'shintoist', 'sikh', 'sunni', 'taoist', 'zoroastrian', 'jewish american princess', 'jewish american princesses', 'jap', 'japs', 'dreadlocked', 'curly-haired', 'frizzy-haired', 'coily-haired', 'afro', 'afros', 'jewfro', 'jewfros', 'brown-skinned', 'dark-skinned', 'olive-skinned', 'yellow', 'asylum seeker', 'asylum seekers', 'refugee', 'refugees', 'immigrant', 'immigrants', 'daca', 'dreamer', 'dreamers']
-
-HATE_SPEECH_KW = [
-    "asian drive", "islam terrorism", "arab terror", "jsil", "racecard", "race card", "refugeesnotwelcome",\
-    "DeportallMuslims", "banislam", "banmuslims", "destroyislam", "norefugees", "nomuslims", "border jumper", \
-    "border nigger", "boojie", "chinaman", "whigger", "white nigger", "wigger", "wigerette", "bitter clinger", \
-    "nigger", "coonass", "raghead", "house nigger", "white nigger", "camel lover", "moon cricket", "wetback" "bamboo coon", \
-    "camel lover", "chinaman", "whigger", "white nigger", "nigga", "wigger", "zionazi", "camel lover", "zionazi", \
-    "#BuildTheWall", "#DeportThemALL", "#RefugeesNOTwelcome", "#BanSharia", "#BanIslam"]
-
-RACIAL_IND = RACIAL_KW + HATE_SPEECH_KW
-
-def protected_attributes(text, racial_indicators=RACIAL_IND):
-    tweet_racial_indicators = [indicator for indicator in racial_indicators if indicator in text]
-
-    if tweet_racial_indicators:
-        return 1
-    else:
-        return 0
-
-stepname = "Extract Protected Attributes"
-st.subheader(stepname)
-st.write("This processing step will extract protected attributes from the dataset")
-if(st.button(f"{stepname}", type="primary",key=f"bt_processing_step_{stepname}")):
-    #0. Read data
-    #df = pd.DataFrame('labeled_data.csv')
-    df = pd.read_csv('labeled_data.csv')
-    # print(df['class'].value_counts())
-    # labels = {0: 'Hate Speech', 1: 'Offensive Language', 2: 'Neither'}
-    # df['class'] = df['class'].map(labels)
-    # df.to_csv('labeled_data.csv', index=False)
+pipeline_steps = [
+    "Step 1",
+    "Step 2",
+    "Step 3",
+    "Step 4"
+]
 
 
-    #1. Select label, text columns
-    label_col = 'class'
-    text_col = 'tweet'
+mock_biasdetection = [
+    "Racial Prejudice",
+    "Hating Poor People",
+    "Not being a cool dawg"
+]
 
-    # Replace original column names with standardized names
-    df.rename({label_col: 'Label', text_col: 'Text'}, axis=1, inplace=True)
-
-    #2. Extract racial predictor
-    #2.1. Clean text
-    with st.spinner(stepname):
-        df['clean_text'] = df['Text'].apply(lambda x: stop(clean_text(x).replace('rt', '')))
-        df['protected_attribute'] = df.clean_text.apply(lambda tweet: protected_attributes(tweet))        
-
-    st.success(f'Done: {stepname}', icon="✔️")
-    #st.write(df.value_counts("protected_attribute"))
-#st.session_state["df"] = df
-###############################
-# Processing Steps 2: Dataframe Processing
-################################
-#df = st.session_state["df"]
-stepname = "Creating"
-st.subheader(stepname)
-st.write("This processing step will extract protected attributes from the dataset")
-#if(st.button(f"{stepname}", type="primary",key=f"bt_processing_step_{stepname}")):
-    #df = st.session_state["df"]
-with st.spinner(stepname):
-    #df = st.session_state["df"]
-    #3. Extract dataframe, group by selector and protector
-    occurences = df.groupby(['protected_attribute', 'Label'])['Text'].count().unstack()
-    print(occurences)
-    occurences = occurences.reset_index(drop=True).rename({'index': 'protected_attribute'}, axis=1)
-    occurences.index = ['Without Attribute', 'With Attribute']
-    print(occurences)
-    occurences['Overall'] = occurences['Hate Speech'] + occurences['Offensive Language'] + occurences['Neither']
-    pcts = occurences.iloc[1, :] * 100 / occurences.iloc[0, :]
-    pcts = pd.DataFrame(pcts).reset_index().rename({0: 'Dataset Proportion'}, axis=1)
-st.success(f'Done: {stepname}', icon="✔️")
-
-###############################
-# Processing Steps 3: Visualization
-################################
-stepname = "Visualization"
-st.subheader(stepname)
-st.write("This processing step will extract protected attributes from the dataset")
-#if(st.button(f"{stepname}", type="primary",key=f"bt_processing_step_{stepname}")):
-with st.spinner(stepname):
-    #4. Review %s of protector group per label
-    # Create plotly chart to visualize dataset
-    overall = pcts[pcts['Label'] == 'Overall']
-    rest = pcts[pcts['Label'] != 'Overall']
-
-    fig = px.bar(rest, x='Label', y='Dataset Proportion', color_discrete_sequence=['black'])
-    fig.add_trace(go.Bar(x=['Overall'], y=overall['Dataset Proportion'], name='Overall', marker=dict(color='grey')))
-    fig.add_hline(y=overall['Dataset Proportion'].iloc[0], line_width=2, line_dash="dash", line_color="black")
-    fig.update_layout(template='simple_white', width=400)
-    #fig.show()
-    st.plotly_chart(fig, use_container_width=True)
-st.success(f'Done: {stepname}', icon="✔️")
-###############################
-# Processing Steps 4: Chi2-Squared Testing
-################################
-stepname = "Chi2-Squared Testing"
-st.subheader(stepname)
-st.write("This processing step will extract protected attributes from the dataset")
-@st.cache_data
-def review_influence(occurences, significance=0.05):
-    if chi2_contingency(occurences).pvalue < significance:
-        return('The protected attribute (racial) has an influence over the predicted label')
-    else:
-        return('''There is no statistical evidence regarding racial bias from the co-occurrences alone. \n
-            More investigation is needed.''')
-#if(st.button(f"{stepname}", type="primary",key=f"bt_processing_step_{stepname}")):
-with st.spinner(stepname):
-#5. Perform chi2-squared test for the selection
-    st.success(f'Done: {stepname}', icon="✔️")
-st.error(f'{review_influence(occurences)}', icon="🚨")
+for i,step in enumerate(pipeline_steps):
+    st.subheader(step)
+    st.write(lorem)
+    if(st.button(f"Execute {step}", type="primary",key=f"bt_processing_step_{i}")):
+        st.write("Executed")
 
 
+st.header("Bias Identification")
+for bias in mock_biasdetection:
+    st.info(f'Found Bias: {bias}', icon="🚨")
+    st.error(f'Found Bias: {bias}', icon="🚨")
 
-###############################
-# Processing Steps 5: Show Metrics
-################################
-stepname = "Show Metrics"
-st.subheader(stepname)
-st.write("This processing step will extract protected attributes from the dataset")
+st.write(lorem)
 
 
-metrics_df = pd.read_csv("metrics.csv")
-st.write(metrics_df)
+st.header("Bias Correction")
+for bias in mock_biasdetection:
+    st.info(f'Corrected/Mitigated Bias: {bias}', icon="✔️")
+    st.success(f'Corrected/Mitigated Bias: {bias}', icon="✔️")
+st.write(lorem)
 
+
+st.header("Model Training")
+st.write(lorem)
+
+#
+# EVALUATION
+#
+st.header("Evaluation")
+st.write(lorem)
+
+# TODO: Show metrics of initial dataset
+# TODO: Show metrics of corrected dataset
 
 df_raw = pd.DataFrame(columns=["Metric","Scoring"])
 
-st.subheader("Original Bias")
-st.write(metrics_df.iloc[0])
-st.metric(label="BSPN_AUC", value="70 °F", delta="1.2 °F")
-st.metric(label="BPSN_AUC", value="70 °F", delta="1.2 °F")
-st.metric(label="SUbgroup_AUC", value="70 °F", delta="1.2 °F")
 
-st.subheader("Correct Bias Weights")
-#st.metric(label="Correct Bias Weights", value="70 °F", delta="1.2 °F")
-st.metric(label="BSPN_AUC", value="70 °F", delta="1.2 °F")
-st.metric(label="BPSN_AUC", value="70 °F", delta="1.2 °F")
-st.metric(label="SUbgroup_AUC", value="70 °F", delta="1.2 °F")
-st.write(metrics_df.iloc[1])
-
-st.subheader("Adversarial Debiasing")
-#st.metric(label="Adversarial Debiasing", value="70 °F", delta="1.2 °F")
-st.metric(label="BSPN_AUC", value="70 °F", delta="1.2 °F")
-st.metric(label="BPSN_AUC", value="70 °F", delta="1.2 °F")
-st.metric(label="SUbgroup_AUC", value="70 °F", delta="1.2 °F")
-st.write(metrics_df.iloc[2])
-
-
-
-# st.metric(label="Awesomeness", value="95%", delta="2%",
-#     delta_color="normal")
-###############################
-# Processing Steps 6: Download Data
-################################
-# d = {
-#     "Metric" : ["M1","M2","M3","M4"],
-#     "Scoring_Raw": [1,2,3,4],
-#     "Scoring_Corrected": [2,3,4,5],
-#     "Improvement": ["3.7%","4.5%","7.0%","2.0%"]
+d = {
+    "Metric" : ["M1","M2","M3","M4"],
+    "Scoring_Raw": [1,2,3,4],
+    "Scoring_Corrected": [2,3,4,5],
+    "Improvement": ["3.7%","4.5%","7.0%","2.0%"]
     
-# }
-# df_comparison = pd.DataFrame(data=d).style.hide()
-# st.write(df_comparison)
+}
+df_comparison = pd.DataFrame(data=d).style.hide()
+st.write(df_comparison)
 
 
 
@@ -259,13 +147,12 @@ if(st.button("Upload corrected Dataset", type="primary",key="bt_uploadmitigatedd
         time.sleep(5)
     st.success('Done!')
     st.error("ohoh")
+    st.session_state["Multipage_var1"] = "Upload Done"
 
 
-
-# st.metric(label="Bias Score Improvement", value="65%", delta="17.5%",
-#     delta_color="normal")
 text_contents = """This is some text"""
-
+st.metric(label="Bias Score Improvement", value="65%", delta="17.5%",
+    delta_color="normal")
 st.download_button('Download Evaluation Summary', text_contents)
 
 
@@ -294,10 +181,3 @@ st.download_button(
 #st.line_chart(df)
 # x = st.slider('x')  # 👈 this is a widget
 # st.write(x, 'squared is', x * x)
-
-
-
-#################################
-
-
-
