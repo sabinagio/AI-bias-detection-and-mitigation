@@ -40,20 +40,23 @@ def upload_file(file_name, bucket, object_name=None):
     return True
 
 
-
+#WARNING: S3 not working anymore, just a local instance now
 #conn = st.connection('s3', type=FilesConnection)
-s3 = boto3.resource("s3")
+#s3 = boto3.resource("s3")
 #s3bucket = s3.Bucket(bucket_name)
 
 
-file_names = [] 
-bucket = s3.Bucket(bucket_name) 
-for s3_obj in bucket.objects.all(): 
-    file_names.append(s3_obj.key)
+# file_names = [] 
+# bucket = s3.Bucket(bucket_name) 
+# for s3_obj in bucket.objects.all(): 
+#     file_names.append(s3_obj.key)
 
-st.session_state["datasets"] = file_names
+# st.session_state["datasets"] = file_names
 
-df2 = pd.DataFrame(columns=["Dataset"],data=file_names)
+
+st.session_state["datasets"] = ["jigsawracial.csv"]
+file_names = ["jigsawracial.csv"]
+#df2 = pd.DataFrame(columns=["Dataset"],data=file_names)
 #st.header("Available Datasets")
 #st.write(df2)
 

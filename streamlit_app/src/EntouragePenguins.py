@@ -4,8 +4,11 @@ import pandas as pd
 
 #import frequency_review
 
-st.session_state["apptitle"] = "🐧 PULSE - AI Bias Identification and Correction Tool"
+st.session_state["apptitle"] = "🐧 PULSE: Entourage Penguins' AI Bias Identification and Correction Tool"
 st.session_state["dataset"] = ""
+
+#ADD LOCAL DATASETS HERE IN THE LIST
+st.session_state["datasets"] = ["jigsawracial.csv"]
 
 st.title(st.session_state["apptitle"])
 #st.subheader(f"Selected Dataset: {st.session_state["dataset"]}")
