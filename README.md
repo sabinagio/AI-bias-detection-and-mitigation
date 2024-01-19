@@ -1,4 +1,5 @@
 # PULSE - AI bias detection and mitigation in sentiment analysis
+![](https://github.com/sabinagio/AI-bias-detection-and-mitigation/blob/78a23e6cb1860d5bfed5b50b7d5ffd6afe5c6bef/images/image%20(1).png)
 This project was created in 48 hours by the Entourage Penguins team ([Camille Coeurjoly](https://www.linkedin.com/in/camillecoeurjoly/), [Leo Stahlschmidt](https://www.linkedin.com/in/leo-s-34680012b/), and [Sabina Firtala](https://www.linkedin.com/in/sabina-firtala/)) at the 6th edition of the Hackathon for Good.
 
 
@@ -13,6 +14,11 @@ Read more about the challenge [here](https://www.hackathonforgood.org/hackathons
 Our team created PULSE, a Streamlit application which detects and mitigates racist AI modelling results for social media content moderation. PULSE detects bias in model outputs statistically and by calculating the [bias AUC scores as devised by Google Jigsaw](https://medium.com/sentropy/our-approach-to-machine-learning-bias-part-2-4f94b3f58ff9) and it mitigates it using both weight correction and adversarial debiasing. To detect whether a text includes a racial subgroup, we used [Holistic Bias descriptors](https://github.com/facebookresearch/ResponsibleNLP/tree/main/holistic_bias) developed by Meta. We present the [CrowdFlower dataset](https://github.com/t-davidson/hate-speech-and-offensive-language) as our use-case and welcome any suggestions for improvement.
 
 *Note: The PULSE version currently in GitHub may still be missing some functionality. Please contact the repository owner (Sabina Firtala) regarding issues.*
+
+![](https://github.com/sabinagio/AI-bias-detection-and-mitigation/blob/78a23e6cb1860d5bfed5b50b7d5ffd6afe5c6bef/images/image%20(2).png)
+![](https://github.com/sabinagio/AI-bias-detection-and-mitigation/blob/78a23e6cb1860d5bfed5b50b7d5ffd6afe5c6bef/images/image%20(3).png)
+![](https://github.com/sabinagio/AI-bias-detection-and-mitigation/blob/78a23e6cb1860d5bfed5b50b7d5ffd6afe5c6bef/images/image%20(4).png)
+![](https://github.com/sabinagio/AI-bias-detection-and-mitigation/blob/78a23e6cb1860d5bfed5b50b7d5ffd6afe5c6bef/images/image%20(5).png)
 
 ## Data
 
